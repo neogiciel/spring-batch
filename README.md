@@ -28,7 +28,7 @@ Lancement de l'application Spring-boot<br>
 $ mvn  clean
 $ mvn spring-boot:run
 ```
-Le service est accessible sur http://localhost:8080
+Le service est accessible sur http://localhost:8080<br>
 La console de base de données H2 est accessible via l'url  http://localhost:8080/h2-console
 
 ## FAQs
@@ -49,27 +49,26 @@ public class SimpleScheduledTask {
 ```
 * Via de la programmation pure
 ```
-      //Job Creation
-			JobDataMap map = new JobDataMap();
-			map.put("message", "SimpleJob");
+//Job Creation
+JobDataMap map = new JobDataMap();
+map.put("message", "SimpleJob");
+JobDetail job = JobBuilder.newJob(SimpleJob.class).withIdentity("SimpleJob", "group1").setJobData(map).build();
 			
-			JobDetail job = JobBuilder.newJob(SimpleJob.class).withIdentity("SimpleJob", "group1").setJobData(map).build();
-			
-			//Simple Trigger
-			Date startTime = DateBuilder.nextGivenSecondDate(null, 10);
-			SimpleTrigger trigger = TriggerBuilder
-				.newTrigger()
-				.withIdentity("FourTimesTrigger", "group1")
-				.startAt(startTime)
-				.withSchedule(SimpleScheduleBuilder.simpleSchedule()
-				.withIntervalInSeconds(10)
-				.withRepeatCount(4)).build();
+//Simple Trigger
+Date startTime = DateBuilder.nextGivenSecondDate(null, 10);
+SimpleTrigger trigger = TriggerBuilder
+		.newTrigger()
+		.withIdentity("FourTimesTrigger", "group1")
+		.startAt(startTime)
+		.withSchedule(SimpleScheduleBuilder.simpleSchedule()
+		.withIntervalInSeconds(10)
+		.withRepeatCount(4)).build();
 		
-			//Scheduler
-			SchedulerFactory sf = new StdSchedulerFactory();
-			Scheduler scheduler = sf.getScheduler();
-			scheduler.start();
-			scheduler.scheduleJob(job, trigger);
+//Scheduler
+SchedulerFactory sf = new StdSchedulerFactory();
+Scheduler scheduler = sf.getScheduler();
+scheduler.start();
+scheduler.scheduleJob(job, trigger);
 
 ```
 
