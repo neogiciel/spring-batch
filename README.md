@@ -47,7 +47,7 @@ public class SimpleScheduledTask {
     //@Scheduled(cron = "0 0 * * * *")
     public void test() throws Exception{
 ```
-* Via de la programmation pure
+* Via de la programation pure
 ```
 //Job Creation
 JobDataMap map = new JobDataMap();
