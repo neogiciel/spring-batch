@@ -4,10 +4,7 @@
   <tr>
     <td><img src="https://blog.mossroy.fr/wp-content/uploads/2019/09/spring-boot-logo.png" alt="drawing" height="280px"/></td>
     <td>
-![spaces_rq9WIQinJaxpWMvakjIQ_uploads_git-blob-d79dfd96447d843c0b28ba93b8e98e0b2e77832a_image (258)](https://github.com/neogiciel/spring-batch/assets/123723616/8a9cd7d3-586e-4a38-b777-987f39598c8a)
-
-
-      
+      <img src="https://github.com/neogiciel/spring-batch/assets/123723616/8a9cd7d3-586e-4a38-b777-987f39598c8a" alt="drawing" height="280px"/>
     </td>
   </tr>
 </table>
