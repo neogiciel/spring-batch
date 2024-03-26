@@ -11,7 +11,8 @@
 
 ## Informations Générales
 ***
-Mise en place d'un broker Kafka permettant la gestion des messages Asynchrone
+Mise en place d'un batch spring. Avec l'utilisation des librairies spring-batch et spring-quartz.
+Cet exemple s'accompagne de la mise en place d'un base de données H2 afin d'effectuer le suivit des job. 
 
 ## Technologies
 ***
@@ -22,46 +23,54 @@ Technologies utilisées:
 
 ## Instalation
 ***
-Deploiement de Kafka via docker compose
-```
-version: "3"
-services:
-  zookeeper:
-    image: 'bitnami/zookeeper:latest'
-    ports:
-      - '2181:2181'
-    environment:
-      - ALLOW_ANONYMOUS_LOGIN=yes
-  kafka:
-    image: 'bitnami/kafka:latest'
-    ports:
-      - '9092:9092'
-    environment:
-      - KAFKA_BROKER_ID=1
-      - KAFKA_LISTENERS=PLAINTEXT://:9092
-      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://127.0.0.1:9092
-      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
-      - ALLOW_PLAINTEXT_LISTENER=yes
-    depends_on:
-      - zookeeper
-```
-
-Lancement de Kafka
-docker-compose up -d
-
 Lancement de l'application Spring-boot<br>
 ```
 $ mvn  clean
 $ mvn spring-boot:run
 ```
 Le service est accessible sur http://localhost:8080
+La console de base de données H2 est accessible via l'url  http://localhost:8080/h2-console
 
 ## FAQs
 ***
-**Serveur Kafka**<br>
-Le seveur est accessible via http://localhost:9092
+**Mise en place d'une Tache schedule**<br>
 
+La mise en place d'un tache scheduler peur se faire de deux manières<br>
+* Via des annotations
+```
+@Configuration
+@EnableAsync
+@EnableScheduling
+public class SimpleScheduledTask {
 
+    @Scheduled(fixedRate=5000)
+    //@Scheduled(cron = "0 0 * * * *")
+    public void test() throws Exception{
+```
+* Via de la programmation pure
+```
+      //Job Creation
+			JobDataMap map = new JobDataMap();
+			map.put("message", "SimpleJob");
+			
+			JobDetail job = JobBuilder.newJob(SimpleJob.class).withIdentity("SimpleJob", "group1").setJobData(map).build();
+			
+			//Simple Trigger
+			Date startTime = DateBuilder.nextGivenSecondDate(null, 10);
+			SimpleTrigger trigger = TriggerBuilder
+				.newTrigger()
+				.withIdentity("FourTimesTrigger", "group1")
+				.startAt(startTime)
+				.withSchedule(SimpleScheduleBuilder.simpleSchedule()
+				.withIntervalInSeconds(10)
+				.withRepeatCount(4)).build();
+		
+			//Scheduler
+			SchedulerFactory sf = new StdSchedulerFactory();
+			Scheduler scheduler = sf.getScheduler();
+			scheduler.start();
+			scheduler.scheduleJob(job, trigger);
 
+```
 
 
